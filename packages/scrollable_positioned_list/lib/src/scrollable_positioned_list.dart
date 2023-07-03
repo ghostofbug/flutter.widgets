@@ -196,9 +196,9 @@ class ItemScrollController {
   /// Whether any ScrollablePositionedList objects are attached this object.
   ///
   /// If `false`, then [jumpTo] and [scrollTo] must not be called.
-  bool get isAttached => _scrollableListState != null;
+  bool get isAttached => scrollableListState != null;
 
-  _ScrollablePositionedListState? _scrollableListState;
+  _ScrollablePositionedListState? scrollableListState;
 
   /// Immediately, without animation, reconfigure the list so that the item at
   /// [index]'s leading edge is at the given [alignment].
@@ -217,7 +217,7 @@ class ItemScrollController {
   /// * 1 aligns the left edge of the item with the right edge of the view.
   /// * 0.5 aligns the left edge of the item with the center of the view.
   void jumpTo({required int index, double alignment = 0}) {
-    _scrollableListState!._jumpTo(index: index, alignment: alignment);
+    scrollableListState!._jumpTo(index: index, alignment: alignment);
   }
 
   /// Animate the list over [duration] using the given [curve] such that the
@@ -248,10 +248,10 @@ class ItemScrollController {
     Curve curve = Curves.linear,
     List<double> opacityAnimationWeights = const [40, 20, 40],
   }) {
-    assert(_scrollableListState != null);
+    assert(scrollableListState != null);
     assert(opacityAnimationWeights.length == 3);
     assert(duration > Duration.zero);
-    return _scrollableListState!._scrollTo(
+    return scrollableListState!._scrollTo(
       index: index,
       alignment: alignment,
       duration: duration,
@@ -261,12 +261,12 @@ class ItemScrollController {
   }
 
   void _attach(_ScrollablePositionedListState scrollableListState) {
-    assert(_scrollableListState == null);
-    _scrollableListState = scrollableListState;
+    assert(scrollableListState == null);
+    scrollableListState = scrollableListState;
   }
 
   void _detach() {
-    _scrollableListState = null;
+    scrollableListState = null;
   }
 }
 
@@ -284,24 +284,24 @@ class ScrollOffsetController {
       required Duration duration,
       Curve curve = Curves.linear}) async {
     final currentPosition =
-        _scrollableListState!.primary.scrollController.offset;
+        scrollableListState!.primary.scrollController.offset;
     final newPosition = currentPosition + offset;
-    await _scrollableListState!.primary.scrollController.animateTo(
+    await scrollableListState!.primary.scrollController.animateTo(
       newPosition,
       duration: duration,
       curve: curve,
     );
   }
 
-  _ScrollablePositionedListState? _scrollableListState;
+  _ScrollablePositionedListState? scrollableListState;
 
   void _attach(_ScrollablePositionedListState scrollableListState) {
-    assert(_scrollableListState == null);
-    _scrollableListState = scrollableListState;
+    assert(scrollableListState == null);
+    scrollableListState = scrollableListState;
   }
 
   void _detach() {
-    _scrollableListState = null;
+    scrollableListState = null;
   }
 }
 
@@ -376,10 +376,10 @@ class _ScrollablePositionedListState extends State<ScrollablePositionedList>
   @override
   void didUpdateWidget(ScrollablePositionedList oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.itemScrollController?._scrollableListState == this) {
+    if (oldWidget.itemScrollController?.scrollableListState == this) {
       oldWidget.itemScrollController?._detach();
     }
-    if (widget.itemScrollController?._scrollableListState != this) {
+    if (widget.itemScrollController?.scrollableListState != this) {
       widget.itemScrollController?._detach();
       widget.itemScrollController?._attach(this);
     }
